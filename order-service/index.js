@@ -1,5 +1,5 @@
 import express from "express";
-import { hamburguerRouter } from "./hamburguerRouter.js";
+import { hamburguerRouter } from "./routes/hamburguerRouter.js";
 
 const app = express();
 app.use(express.json());
