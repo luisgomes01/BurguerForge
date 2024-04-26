@@ -1,17 +1,21 @@
-FROM node:20.11.1
+# Base Image
+FROM node:20.11.1-alpine3.19
 
-ENV NODE_ENV production
+# Setup PNPM
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-
 RUN corepack enable
 
-USER node
+# Set work directory, imagine like "cd /home/node/code" in shell
 WORKDIR /home/node/code
-COPY . /home/node/code
 
+# Bundle App source
+COPY . .
+
+# Install application dependencies
 RUN pnpm install
 
 EXPOSE 3000
 
-CMD [ "pnpm", "start" ]
+# Startup command
+CMD ["pnpm", "start"]
