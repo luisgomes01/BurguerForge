@@ -8,7 +8,7 @@ const startServer = () => {
   const app = express();
   app.use(express.json());
   
-  const PORT = 3000;
+  const PORT = process.env.SERVER_PORT || 3000;
   
   let connection!: Connection, channel!: Channel
   
