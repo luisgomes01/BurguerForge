@@ -14,6 +14,6 @@ export const connectRabbitMq = async (connection: Connection, channel: Channel) 
         console.log('✅ Connected to RabbitMq')
     }
     catch (error) {
-        console.error(`Failed to connect to Rabbitmq: ${error}`)
+        console.error(`❌ Failed to connect to Rabbitmq: ${error}`)
     }
 }
