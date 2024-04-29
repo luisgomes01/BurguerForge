@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "pnpm run watch-compile && pnpm run watch-dev",
+    "dev": "pnpm run watch-compile && pnpm run watch-dev && nodemon ./dist/src/index.js",
     "watch-compile": "swc src -w --out-dir dist",
     "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/src/index.js",
     "build": "swc src -d dist",
