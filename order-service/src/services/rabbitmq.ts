@@ -7,13 +7,39 @@ const port = process.env.MQ_PORT || '5672'
 
 const connectionUrl = `amqp://${username}:${password}@${host}:${port}`
 
-export const connectRabbitMq = async (connection: Connection, channel: Channel) => {
-    try {
-        connection = await amqp.connect(connectionUrl)
-        channel = await connection.createChannel()
-        console.log('✅ Connected to RabbitMq')
+const EXCHANGE = "orders"
+
+export class Producer {
+    channel!:Channel
+    connection!:Connection
+
+    async createChannel() {
+        this.connection = await amqp.connect(connectionUrl)
+        this.channel = await this.connection.createChannel()
     }
-    catch (error) {
-        console.error(`❌ Failed to connect to Rabbitmq: ${error}`)
+
+    async publishMessage(routingKey: string, orderMessage: Object, email: string) {
+        if(!this.channel) {
+            await this.createChannel();
+        }
+
+        await this.channel.assertExchange(EXCHANGE, 'fanout')
+
+        const orderDetails = {
+            routingKey,
+            orderMessage,
+            email,
+            dateTime: new Date(),
+        }
+
+        this.channel.publish(EXCHANGE, '', Buffer.from(JSON.stringify(orderDetails)))
+
+        console.log(`The message ${JSON.stringify(orderMessage)} is sent to the ${EXCHANGE} exchange.`)
+        this.close()
+    }
+
+    async close() {
+        await this.channel.close();
+        await this.connection.close()
     }
 }
