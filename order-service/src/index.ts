@@ -11,7 +11,7 @@ const startServer = () => {
   const PORT = process.env.SERVER_PORT || 3000;
   
   let connection!: Connection, channel!: Channel
-  
+
   connectMongoDb()
   
   connectRabbitMq(connection, channel)
@@ -23,5 +23,9 @@ const startServer = () => {
   );
 }
 
-startServer()
+const waitForIt = Number(process.env.SLEEP_TIME) || 30000
+
+setTimeout(() => {
+  startServer()
+}, waitForIt)
 

@@ -1,0 +1,36 @@
+services:
+  order-service:
+    image: luisgomes01/order-service:v1
+    container_name: order-service
+    ports:
+      - 3000:3000
+    environment:
+      - SERVER_PORT=3000
+      - HOST=RABBITMQ
+      - MQPORT=5672
+      - SLEEP_TIME=10000
+      - MONGO_HOST=mongodb
+    depends_on:
+      - mongodb
+      - rabbitmq
+    volumes:
+      - ~/.docker-conf/order-service/data:/data/order-service
+
+  mongodb:
+    image: mongo:5.0.26-focal
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/.docker-conf/mongodb/data/db/data/configdb:/data/db
+
+  rabbitmq:
+    image: rabbitmq:alpine
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+

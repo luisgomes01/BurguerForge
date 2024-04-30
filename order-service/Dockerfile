@@ -15,6 +15,8 @@ COPY . .
 # Install application dependencies
 RUN pnpm install
 
+RUN pnpm build
+
 EXPOSE 3000
 
 # Startup command
