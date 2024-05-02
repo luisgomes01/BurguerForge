@@ -63,9 +63,4 @@ export class Producer {
       console.log(`Error on order placement: ${error}`);
     }
   }
-
-  async close() {
-    await this.channel.close();
-    await this.connection.close();
-  }
 }
