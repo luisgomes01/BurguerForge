@@ -8,6 +8,7 @@ const port = process.env.MQ_PORT || "5672";
 const connectionUrl = `amqp://${username}:${password}@${host}:${port}`;
 
 const EXCHANGE = "orders";
+const QUEUE = "orderQueue";
 
 type TOrder = {
   hamburguerType: string;
@@ -31,6 +32,8 @@ export class Producer {
       }
 
       await this.channel.assertExchange(EXCHANGE, "fanout");
+      await this.channel.assertQueue(QUEUE, { durable: true });
+      await this.channel.bindQueue(QUEUE, EXCHANGE, "");
 
       const orderDetails = {
         routingKey,
