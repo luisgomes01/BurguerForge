@@ -21,8 +21,12 @@ export class Producer {
   connection!: Connection;
 
   async createChannel() {
-    this.connection = await amqp.connect(connectionUrl);
-    this.channel = await this.connection.createChannel();
+    try {
+      this.connection = await amqp.connect(connectionUrl);
+      this.channel = await this.connection.createChannel();
+    } catch (error) {
+      console.log(`Error on channel creation: ${error}`);
+    }
   }
 
   async sendOrder(routingKey: string, order: TOrder, email: string) {
@@ -56,7 +60,7 @@ export class Producer {
         );
       }, order.leadTime);
     } catch (error) {
-      console.log({ error });
+      console.log(`Error on order placement: ${error}`);
     }
   }
 
