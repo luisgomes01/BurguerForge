@@ -25,6 +25,11 @@ const OrderSchema = new Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["pending", "accepted", "delivered"],
+    default: "pending",
+  },
 });
 
 export const Order = model("Order", OrderSchema);

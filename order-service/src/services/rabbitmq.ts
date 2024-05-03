@@ -56,7 +56,7 @@ export class Producer {
         newOrder.save();
         console.log(
           `The message ${JSON.stringify(
-            order
+            newOrder
           )} is sent to the ${exchangeName} exchange.`
         );
       }, order.leadTime);
