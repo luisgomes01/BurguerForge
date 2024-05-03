@@ -3,22 +3,11 @@ import { Request, Response } from "express";
 import {
   BACON_BURGUER,
   CHEESE_BURGUER,
-  LEAD_TIME_MAPPING,
   VEGGIE_BURGUER,
 } from "../constants/index.js";
+import { makeOrderDetailsFactory } from "../factories/orderFactory.js";
 
 const producer = new Producer();
-
-const makeOrderFactory = (hamburguerType: string, price: number) => {
-  const order = {
-    hamburguerType,
-    price,
-    leadTime:
-      LEAD_TIME_MAPPING[hamburguerType as keyof typeof LEAD_TIME_MAPPING] || 0,
-  };
-
-  return order;
-};
 
 export class OrderController {
   async placeOrder(req: Request, res: Response) {
@@ -27,17 +16,17 @@ export class OrderController {
       email,
     } = req.body;
 
-    const order = makeOrderFactory(hamburguerType, price);
+    const orderDetails = makeOrderDetailsFactory(hamburguerType, price, email);
 
     switch (hamburguerType) {
       case CHEESE_BURGUER:
-        await producer.sendOrder("", order, email);
+        await producer.sendOrder(orderDetails);
         break;
       case VEGGIE_BURGUER:
-        await producer.sendOrder("", order, email);
+        await producer.sendOrder(orderDetails);
         break;
       case BACON_BURGUER:
-        await producer.sendOrder("", order, email);
+        await producer.sendOrder(orderDetails);
         break;
       default:
         res
