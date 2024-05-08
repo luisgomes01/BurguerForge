@@ -11,7 +11,7 @@ const BurguerSchema = new Schema({
   },
   leadTime: {
     type: Number,
-    required: false,
+    required: true,
   },
 });
 

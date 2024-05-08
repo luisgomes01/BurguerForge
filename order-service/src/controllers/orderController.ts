@@ -20,11 +20,7 @@ export class OrderController {
 
     switch (hamburguerType) {
       case CHEESE_BURGUER:
-        await producer.sendOrder(orderDetails);
-        break;
       case VEGGIE_BURGUER:
-        await producer.sendOrder(orderDetails);
-        break;
       case BACON_BURGUER:
         await producer.sendOrder(orderDetails);
         break;

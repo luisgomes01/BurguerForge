@@ -13,7 +13,7 @@ const exchangeName = "orders";
 type TOrder = {
   hamburguerType: string;
   price: number;
-  leadTime?: number;
+  leadTime: number;
 };
 
 interface IOrderDetails {
@@ -43,23 +43,19 @@ export class Producer {
         await this.connectRabbitMq();
       }
 
-      const { routingKey, order } = orderDetails;
+      const { routingKey } = orderDetails;
       const newOrder = new Order(orderDetails);
-
-      setTimeout(() => {
-        delete order.leadTime;
-        this.channel.publish(
-          exchangeName,
-          routingKey,
-          Buffer.from(JSON.stringify(orderDetails))
-        );
-        newOrder.save();
-        console.log(
-          `The message ${JSON.stringify(
-            newOrder
-          )} is sent to the ${exchangeName} exchange.`
-        );
-      }, order.leadTime);
+      this.channel.publish(
+        exchangeName,
+        routingKey,
+        Buffer.from(JSON.stringify(newOrder))
+      );
+      newOrder.save();
+      console.log(
+        `The message ${JSON.stringify(
+          newOrder
+        )} is sent to the ${exchangeName} exchange.`
+      );
     } catch (error) {
       console.log(`Error on order placement: ${error}`);
     }

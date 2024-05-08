@@ -6,9 +6,8 @@ const threeSeconds = 3000;
 const sixSeconds = 6000;
 const nineSeconds = 9000;
 
-// Lead time to simulate asynchronous operations/preparation time
 export const LEAD_TIME_MAPPING = {
-  CHEESE_BURGUER: threeSeconds,
-  VEGGIE_BURGUER: sixSeconds,
-  BACON_BURGUER: nineSeconds,
+  [CHEESE_BURGUER]: threeSeconds,
+  [VEGGIE_BURGUER]: sixSeconds,
+  [BACON_BURGUER]: nineSeconds,
 };
