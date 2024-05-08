@@ -1,7 +1,9 @@
 import express from "express";
 import { MongoDb } from "./services/mongodb.js";
+import { Consumer } from "./services/rabbitmq.js";
 
 const mongoDb = new MongoDb();
+const consumer = new Consumer();
 
 const startServer = async () => {
   const app = express();
@@ -11,12 +13,15 @@ const startServer = async () => {
 
   await mongoDb.connect();
 
+  await consumer.connectRabbitMq();
+
   app.listen(PORT, () =>
     console.log(`Consumer Service up and running on port ${PORT}`)
   );
 
   process.on("SIGINT", () => {
     console.log("Closing connections...");
+    consumer.closeConnection();
     mongoDb.disconnect();
     process.exit();
   });
