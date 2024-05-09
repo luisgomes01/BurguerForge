@@ -8,7 +8,7 @@ export class MongoDb {
   constructor(port: string = "27017", host: string = "127.0.01") {
     this.port = process.env.MONGO_PORT || port;
     this.host = process.env.MONGO_HOST || host;
-    this.connectionUrl = `mongodb://${host}:${port}/order_db`;
+    this.connectionUrl = `mongodb://${this.host}:${this.port}/order_db`;
   }
 
   public async connect(): Promise<void> {
