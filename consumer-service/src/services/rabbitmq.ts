@@ -64,6 +64,7 @@ export class Consumer {
   async processOrder(order, channel) {
     const parsedOrder = JSON.parse(order.content.toString());
     await this.changeOrderStatus(OrderModel, parsedOrder._id, ORDER_ACCEPTED);
+
     setTimeout(() => {
       this.changeOrderStatus(OrderModel, parsedOrder._id, ORDER_DELIVERED);
       channel.ack(order);
@@ -71,12 +72,11 @@ export class Consumer {
   }
 
   async changeOrderStatus(orderModel, orderId, newOrderStatus) {
-    try {
-      await orderModel.findByIdAndUpdate(orderId, { status: newOrderStatus });
-      console.log(`Order - ${orderId} ${newOrderStatus}`);
-    } catch (err) {
-      console.log(`Error on change order status ${err}`);
-    }
+    await this.mongoService.updateOrderStatus(
+      orderModel,
+      orderId,
+      newOrderStatus
+    );
   }
 
   async closeConnection() {

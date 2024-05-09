@@ -28,4 +28,17 @@ export class MongoDb {
       console.log(`❌ Failed to disconnect from MongoDB: ${error}`);
     }
   }
+
+  public async updateOrderStatus(
+    orderModel,
+    orderId,
+    newOrderStatus
+  ): Promise<void> {
+    try {
+      await orderModel.findByIdAndUpdate(orderId, { status: newOrderStatus });
+      console.log(`Order - ${orderId} ${newOrderStatus}`);
+    } catch (err) {
+      console.log(`Error on change order status ${err}`);
+    }
+  }
 }
