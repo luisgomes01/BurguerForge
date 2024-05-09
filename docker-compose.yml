@@ -15,6 +15,22 @@ services:
       - rabbitmq
     volumes:
       - ~/.docker-conf/order-service/data:/data/order-service
+  
+  consumer-service:
+    image: luisgomes01/consumer-service:v1
+    container_name: consumer-service
+    ports:
+      - 3001:3001
+    environment:
+      - SERVER_PORT=3001
+      - HOST=RABBITMQ
+      - MQPORT=5672
+      - SLEEP_TIME=10000
+      - MONGO_HOST=mongodb
+    depends_on:
+      - order-service
+    volumes:
+      - ~/.docker-conf/consumer-service/data:/data/consumer-service
 
   mongodb:
     image: mongo:5.0.26-focal
