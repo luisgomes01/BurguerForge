@@ -17,7 +17,7 @@ const startServer = () => {
   );
 };
 
-const waitForIt = Number(process.env.SLEEP_TIME) || 30000;
+const waitForIt = Number(process.env.SLEEP_TIME) || 0;
 
 setTimeout(() => {
   startServer();
