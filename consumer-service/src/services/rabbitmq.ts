@@ -1,6 +1,7 @@
 import amqp, { Channel, Connection } from "amqplib";
 import { MongoDb } from "./mongodb.js";
-
+import { Order as OrderModel } from "../model/orderModel.js";
+import { ORDER_ACCEPTED, ORDER_DELIVERED } from "../resources/constants.js";
 const username = process.env.MQ_USERNAME || "guest";
 const password = process.env.MQ_PASSWORD || "guest";
 const host = process.env.HOST || "localhost";
@@ -35,9 +36,7 @@ export class Consumer {
   }
 
   async createQueue() {
-    await this.channel.assertQueue(queueName, {
-      durable: true,
-    });
+    await this.channel.assertQueue(queueName);
   }
 
   async bindQueue() {
@@ -46,6 +45,38 @@ export class Consumer {
 
   async setPrefetchCount() {
     await this.channel.prefetch(prefetchCount);
+  }
+
+  async consume() {
+    try {
+      if (!this.channel) {
+        await this.connectRabbitMq();
+      }
+
+      await this.channel.consume(queueName, (order) =>
+        this.processOrder(order, this.channel)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async processOrder(order, channel) {
+    const parsedOrder = JSON.parse(order.content.toString());
+    await this.changeOrderStatus(OrderModel, parsedOrder._id, ORDER_ACCEPTED);
+    setTimeout(() => {
+      this.changeOrderStatus(OrderModel, parsedOrder._id, ORDER_DELIVERED);
+      channel.ack(order);
+    }, parsedOrder.order.leadTime);
+  }
+
+  async changeOrderStatus(orderModel, orderId, newOrderStatus) {
+    try {
+      await orderModel.findByIdAndUpdate(orderId, { status: newOrderStatus });
+      console.log(`Order - ${orderId} ${newOrderStatus}`);
+    } catch (err) {
+      console.log(`Error on change order status ${err}`);
+    }
   }
 
   async closeConnection() {

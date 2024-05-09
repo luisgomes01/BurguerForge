@@ -15,6 +15,8 @@ const startServer = async () => {
 
   await consumer.connectRabbitMq();
 
+  await consumer.consume();
+
   app.listen(PORT, () =>
     console.log(`Consumer Service up and running on port ${PORT}`)
   );
