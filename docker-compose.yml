@@ -17,7 +17,7 @@ services:
       - ~/.docker-conf/order-service/data:/data/order-service
   
   consumer-service:
-    image: luisgomes01/consumer-service:v1.1
+    image: luisgomes01/consumer-service:v1.2
     container_name: consumer-service
     ports:
       - 3001:3001
