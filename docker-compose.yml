@@ -15,7 +15,7 @@ services:
       - rabbitmq
     volumes:
       - ~/.docker-conf/order-service/data:/data/order-service
-  
+
   consumer-service:
     image: luisgomes01/consumer-service:v1.2
     container_name: consumer-service
@@ -28,12 +28,14 @@ services:
       - SLEEP_TIME=10000
       - MONGO_HOST=mongodb
     depends_on:
+      - mongodb
+      - rabbitmq
       - order-service
     volumes:
       - ~/.docker-conf/consumer-service/data:/data/consumer-service
 
   mongodb:
-    image: mongo:5.0.26-focal
+    image: mongo:7.0.10-rc0-jammy
     container_name: mongodb
     ports:
       - 27017:27017
@@ -49,4 +51,3 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-
